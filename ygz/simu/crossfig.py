@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 import aipy as a, numpy as np, capo as C, pylab as plt
 from scipy import signal
-
+from matplotlib.colors import LogNorm
 #@plt.ion()
 #fqs = np.linspace(.1,.2,203)
 fq = .15
@@ -60,7 +60,7 @@ fng1 = np.exp(-2j*np.pi*bl1_prj*fq)
 fng2 = np.exp(-2j*np.pi*bl2_prj*fq)
 # #fng2=1
 bm2 = aa[0].bm_response((t2x,t2y,t2z),pol='I')[0]**2#/np.abs(tz)#*np.abs(tzsave)
-
+bm2 = np.where(t2z > 0.001, bm2, 0)
 # #bm = np.ones_like(tx)
 # #bm = np.where(tz > 0, bm, 0)
 # bm2 = np.where(tz > 0.001, bm2, 0)
@@ -91,20 +91,22 @@ bm_fng1 = bm * fng1
 bf1 = bm_fng1.reshape((400,400))
 bf2 = bm_fng2.reshape((400,400))
 bfc = (bm_fng2*bm_fng1.conj()).reshape((400,400))
-plt.figure()
-plt.subplot(231)
-plt.imshow(bf1.real)
-plt.subplot(232)
-plt.imshow(bf2.real)
-plt.subplot(233)
-plt.imshow(np.abs(bfc))
-plt.subplot(234)
-plt.imshow(np.fft.fftshift(np.fft.fftn(bf1).real))
-plt.subplot(235)
-plt.imshow(np.fft.fftshift(np.fft.fftn(bf2).real))
-plt.subplot(236)
-plt.imshow(np.abs(np.fft.fftshift(np.fft.fftn(bfc))))
-plt.show()
+f, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(2, 3)
+fftfq = np.fft.fftshift(np.fft.fftfreq(400, 2./400))
+fq0, fq1 = fftfq[0], fftfq[-1]
+ax1.imshow(bf1.real,extent=[-1,1,-1,1])
+ax2.imshow(bf2.real,extent=[-1,1,-1,1])
+ax3.imshow(np.abs(bfc),extent=[-1,1,-1,1])
+Z1 = np.abs(np.fft.fftshift(np.fft.fftn(bfc)))
+ax4.imshow(np.fft.fftshift(np.fft.fftn(bf1).real), 
+	extent=[fq0, fq1, fq0, fq1],
+	norm=LogNorm(vmin=Z1.min(), vmax=Z1.max()))
+ax5.imshow(np.fft.fftshift(np.fft.fftn(bf2).real),
+	extent=[fq0, fq1, fq0, fq1],
+	norm=LogNorm(vmin=Z1.min(), vmax=Z1.max()))
+ax6.imshow(Z1, norm=LogNorm(vmin=Z1.min(), vmax=Z1.max()), extent=[fq0, fq1, fq0, fq1])
+
+#plt.show()
 
 import IPython; IPython.embed()
 
