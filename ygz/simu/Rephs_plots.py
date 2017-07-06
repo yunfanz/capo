@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt, numpy as np
 import seaborn as sns
 from w_opp import OppSolver
 from matplotlib.font_manager import FontProperties
+sns.set_context("paper", font_scale=2)
+sns.set(style="ticks", color_codes=False,font='DejaVu Serif', font_scale=1.5)
+plt.rc('axes', linewidth=1.5)
 def freq_compare():
     sns.set_context(context='paper', font_scale=2)
     Afqs = np.linspace(.1, .2, 203)
@@ -109,7 +112,7 @@ def plot_freq_compare(RES,RES2,RES3,RES4,FQS,DT):
         #plt.plot(DT,RES[i].imag/NORMS[i], '-.', c=C[i])
         #plt.plot(DT, np.abs(RES[i])/NORMS[i], c=C[i], linewidth=8, alpha=0.5)
     plt.legend(loc=2)
-    ax1.set_ylabel('Without Rephasing')
+    #ax1.set_ylabel('Without Rephasing')
     ax2 = plt.subplot(413)
     for i, fqs in enumerate(FQS):
         label = "%.2fGHz" % fqs[0]
@@ -118,7 +121,7 @@ def plot_freq_compare(RES,RES2,RES3,RES4,FQS,DT):
         #plt.plot(DT, np.abs(RES3[i])/NORMS[i], c=C[i], linewidth=8, alpha=0.5)
     ax2.set_ylim([-1.1,1.1])
     plt.legend(loc=2)
-    ax2.set_ylabel('With Rephasing')
+    #ax2.set_ylabel('With Rephasing')
     ax3 = plt.subplot(412)
     for i, fqs in enumerate(FQS):
         label = "%.2fGHz" % fqs[0]
@@ -147,3 +150,6 @@ def plot_freq_compare(RES,RES2,RES3,RES4,FQS,DT):
     plt.legend(loc=2) 
     plt.xlabel('Offset (Sidereal Days)')
     plt.show()
+if __name__ == "__main__":
+    RES,RES2,RES3,RES4,FQS,DT = freq_compare_v2()
+    plot_freq_compare(RES,RES2,RES3,RES4,FQS,DT)

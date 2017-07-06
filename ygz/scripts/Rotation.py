@@ -19,8 +19,8 @@ for time in TIME:
     src.compute(aa)
     # for i in range(nants):
     #     for j in range(i+1,nants):
-    for i in [0]:
-        for j in [26,38]:
+    for i in xrange(32):
+        for j in xrange(i,32):
             if src.alt>0:
                 u,v,w = aa.gen_uvw(i,j,src=src)
                 u,v,w = u.flatten().flatten()[0], v.flatten().flatten()[0], w.flatten().flatten()[0]
@@ -63,7 +63,7 @@ ax = fig.gca(projection='3d')
 for k, u in U.iteritems(): 
      v = V[k]
      w = W[k]
-     import IPython; IPython.embed()
+     #import IPython; IPython.embed()
      ax.plot(u,v,w, label='parametric curve')
 
 ax.set_xlabel('u')
