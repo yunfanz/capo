@@ -2,6 +2,7 @@
 import aipy as a, numpy as np, capo as C, pylab as plt
 from scipy import signal
 from matplotlib.colors import LogNorm
+import numpy.ma as ma
 #@plt.ion()
 #fqs = np.linspace(.1,.2,203)
 fq = .15
@@ -33,7 +34,8 @@ top = np.array([tx,ty,tz], dtype=tx2.dtype)
 
 bm = aa[0].bm_response((tx,ty,tz),pol='I')[0]**2#/np.abs(tz)   #tz is the Jacobian
 
-bm = np.where(tz > 0.001, bm, 0)
+#bm = ma.masked_where(tz < 0.001, bm)
+
 #bm /= bm.sum()
 #h.map = bm
 
@@ -60,7 +62,7 @@ fng1 = np.exp(-2j*np.pi*bl1_prj*fq)
 fng2 = np.exp(-2j*np.pi*bl2_prj*fq)
 # #fng2=1
 bm2 = aa[0].bm_response((t2x,t2y,t2z),pol='I')[0]**2#/np.abs(tz)#*np.abs(tzsave)
-bm2 = np.where(t2z > 0.001, bm2, 0)
+bm2 = ma.masked_where(tz < 0.001, bm2)
 # #bm = np.ones_like(tx)
 # #bm = np.where(tz > 0, bm, 0)
 # bm2 = np.where(tz > 0.001, bm2, 0)
@@ -91,24 +93,39 @@ bm_fng1 = bm * fng1
 bf1 = bm_fng1.reshape((400,400))
 bf2 = bm_fng2.reshape((400,400))
 bfc = (bm_fng2*bm_fng1.conj()).reshape((400,400))
-f, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(2, 3)
+fig, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(2, 3)
 fftfq = np.fft.fftshift(np.fft.fftfreq(400, 2./400))
 fq0, fq1 = fftfq[0], fftfq[-1]
-ax1.imshow(bf1.real,extent=[-1,1,-1,1])
-ax2.imshow(bf2.real,extent=[-1,1,-1,1])
-ax3.imshow(np.abs(bfc),extent=[-1,1,-1,1])
+im1 = ax1.imshow(bf1.real,extent=[-1,1,-1,1])
+im2 = ax2.imshow(bf2.real,extent=[-1,1,-1,1])
+im3 = ax3.imshow(np.abs(bfc),extent=[-1,1,-1,1])
 Z1 = np.abs(np.fft.fftshift(np.fft.fftn(bfc)))
-ax4.imshow(np.fft.fftshift(np.fft.fftn(bf1).real), 
+Z2 = np.abs(np.fft.fftshift(np.abs(np.fft.fftn(bf1)*np.fft.fftn(bf2).conj())))
+im4 = ax4.imshow(np.abs(np.fft.fftshift(np.fft.fftn(bf1))), 
 	extent=[fq0, fq1, fq0, fq1],
-	norm=LogNorm(vmin=Z1.min(), vmax=Z1.max()))
-ax5.imshow(np.fft.fftshift(np.fft.fftn(bf2).real),
+	norm=LogNorm(vmin=Z2.max()*1.e-9, vmax=Z2.max()),
+	interpolation='nearest')
+im5 = ax5.imshow(np.abs(np.fft.fftshift(np.fft.fftn(bf2))),
 	extent=[fq0, fq1, fq0, fq1],
-	norm=LogNorm(vmin=Z1.min(), vmax=Z1.max()))
-ax6.imshow(Z1, norm=LogNorm(vmin=Z1.min(), vmax=Z1.max()), extent=[fq0, fq1, fq0, fq1])
+	norm=LogNorm(vmin=Z2.max()*1.e-9, vmax=Z2.max()),
+	interpolation='nearest')
+im6 = ax6.imshow(Z2, 
+	norm=LogNorm(vmin=Z2.max()*1.e-9, vmax=Z2.max()), 
+	extent=[fq0, fq1, fq0, fq1])
+fig.subplots_adjust(right=0.9)
+ax1.set_xlabel('l'); ax2.set_xlabel('l'); ax3.set_xlabel('l')
+ax1.set_ylabel('m')
+ax4.set_xlabel('u'); ax5.set_xlabel('u'); ax6.set_xlabel('u')
+ax4.set_ylabel('v')
+for ax in [ax2, ax3, ax5, ax6]:
+	plt.setp(ax.get_yticklabels(), visible=False)
+cbar_ax3 = fig.add_axes([0.925, 0.57, 0.025, 0.3])
+cbar_ax6 = fig.add_axes([0.925, 0.13, 0.025, 0.3])
+fig.colorbar(im3, cax=cbar_ax3)
+fig.colorbar(im6, cax=cbar_ax6)
+plt.show()
 
-#plt.show()
-
-import IPython; IPython.embed()
+#import IPython; IPython.embed()
 
 # #IM = a.img.Img(size=200)
 # plt.ion()
