@@ -9,9 +9,9 @@ sns.set_context("paper")
 
 #FILE = 'corr_res.csv'
 #FILES = ['HERA_350_pm.csv', 'HERA_243_pm.csv', 'HERA_128_pm.csv', 'HERA_37_pm.csv','PAPER_128_pm.csv']
-FILES = ['HERA_350_all.csv', 'HERA_243_all.csv', 'HERA_128_all.csv', 'HERA_37_all.csv','PAPER_128_all.csv']
+#FILES = ['HERA_350_all.csv', 'HERA_243_all.csv', 'HERA_128_all.csv', 'HERA_37_all.csv','PAPER_128_all.csv']
 #FILES = ['PAPER_128_pm.csv', 'HERA_350_pm.csv', 'HERA_128_pm.csv']
-LABELS = ['HERA350', 'HERA243', 'HERA128', 'HERA37', 'PAPER128']
+#LABELS = ['HERA350', 'HERA243', 'HERA128', 'HERA37', 'PAPER128']
 #LABELS = ['PAPER128','HERA350', 'HERA128']
 
 #FILES = FILES[::-1]; LABELS = LABELS [::-1]
@@ -19,29 +19,31 @@ def gen_color(l=1):
 	colors = []
 	for i in range(l): colors.append((random(),random(),random()))
 	return np.array(colors)
-COLORS = gen_color(len(FILES))
+
 
 def pairplot(Theta_min=0):
+	FILES = ['PAPER_128_pm.csv', 'HERA_350_pm.csv', 'HERA_128_pm.csv']
+	LABELS = ['PAPER128','HERA350', 'HERA128']
 
 	sns.set(style='ticks', font_scale=1.5,font='DejaVu Serif')
 	dflist = []
 	for i, file in enumerate(FILES):
 		df = pd.read_csv(file)
 		df['Array'] = LABELS[i]
-		df['$\Theta$'] = df['peak']
-		df['$\Theta$'] /= np.amax(df['peak'])
-		df['$L$'] = df['bl1']
+		df['$\Theta_{bb}$'] = df['peak']
+		df['$\Theta_{bb}$'] /= np.amax(df['peak'])
+		df[r'$\bar{b}$'] = df['bl1']
 		df['rho0'] = 0.001*40/df['bl1']
-		df['$\widetilde{\Theta}$'] = np.sqrt(df['mult'])*df['peak']/np.sqrt(1+df['rho0']*2*np.sqrt(df['mult']))
-		df['$\widetilde{\Theta}$'] /= np.amax(df['$\widetilde{\Theta}$'])
-		df = df.loc[df['$\widetilde{\Theta}$']>Theta_min]
-		df['$dT$'] = df['dT']
+		df[r"$\widetilde{\Theta}_{bb^\prime}$"] = np.sqrt(df['mult'])*df['peak']/np.sqrt(1+df['rho0']*2*np.sqrt(df['mult']))
+		df[r"$\widetilde{\Theta}_{bb^\prime}$"] /= np.amax(df[r"$\widetilde{\Theta}_{bb^\prime}$"])
+		df = df.loc[df[r"$\widetilde{\Theta}_{bb^\prime}$"]>Theta_min]
+		df['$\Delta T_{bb^\prime}$'] = df['dT']
 		dflist.append(df)
 
 	df = pd.concat(dflist)
 	plt.locator_params(axis='x', nticks=10)
-	g = sns.pairplot(df,hue='Array',vars=['$dT$','$\widetilde{\Theta}$','$L$'],
-		plot_kws={'alpha':0.4, "s":30}, diag_kws={'histtype':"step", "linewidth":3})
+	g = sns.pairplot(df,hue='Array',vars=['$\Delta T_{bb^\prime}$',r"$\widetilde{\Theta}_{bb^\prime}$",r'$\bar{b}$'],
+		plot_kws={"s":30}, diag_kws={'histtype':"step", "linewidth":3})
 	for i, j in zip(*np.triu_indices_from(g.axes, 1)):
 		g.axes[i, j].set_visible(False)
 	plt.legend(loc=2)
@@ -90,6 +92,9 @@ def get_imp(df, Theta_min=0.0):
 	return totalsens, eqsens
 
 def sensplot():
+	FILES = ['HERA_350_all.csv', 'HERA_243_all.csv', 'HERA_128_all.csv', 'HERA_37_all.csv','PAPER_128_all.csv']
+	LABELS = ['HERA350', 'HERA243', 'HERA128', 'HERA37', 'PAPER128']
+	COLORS = gen_color(len(FILES))
 	print "========= Statistics of sensitibity contribution =========="
 	sns.set(style="ticks", color_codes=True,font='DejaVu Serif', font_scale=2)
 
@@ -110,7 +115,7 @@ def sensplot():
 		plt.plot(TL, eqsensL,'--', color=COLORS[i], linewidth=3)
 	plt.legend()
 	plt.xlabel(r'$\widetilde{\Theta}_{min}$')
-	plt.ylabel(r'$\rho$')
+	plt.ylabel(r'$\rho(\widetilde{\Theta}_{min})/\rho(\widetilde{\Theta}_{min}=1.0)$')
 	plt.gcf().subplots_adjust(bottom=0.2)
 	#plt.rc('axes', linewidth=2)
 

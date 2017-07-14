@@ -3,6 +3,9 @@ import aipy as a, numpy as np, capo as C, pylab as plt
 from scipy import signal
 from matplotlib.colors import LogNorm
 import numpy.ma as ma
+#import seaborn as sns
+#plt.style.use('seaborn-deep')
+#sns.set(style='ticks', font_scale=2.5,font='DejaVu Serif')
 #@plt.ion()
 #fqs = np.linspace(.1,.2,203)
 fq = .15
@@ -34,7 +37,7 @@ top = np.array([tx,ty,tz], dtype=tx2.dtype)
 
 bm = aa[0].bm_response((tx,ty,tz),pol='I')[0]**2#/np.abs(tz)   #tz is the Jacobian
 
-#bm = ma.masked_where(tz < 0.001, bm)
+bm = ma.masked_where(tz < 0.001, bm)
 
 #bm /= bm.sum()
 #h.map = bm
@@ -93,39 +96,47 @@ bm_fng1 = bm * fng1
 bf1 = bm_fng1.reshape((400,400))
 bf2 = bm_fng2.reshape((400,400))
 bfc = (bm_fng2*bm_fng1.conj()).reshape((400,400))
+# fig, ((_, ax0, _), (ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(3, 3)
 fig, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(2, 3)
 fftfq = np.fft.fftshift(np.fft.fftfreq(400, 2./400))
 fq0, fq1 = fftfq[0], fftfq[-1]
-im1 = ax1.imshow(bf1.real,extent=[-1,1,-1,1])
-im2 = ax2.imshow(bf2.real,extent=[-1,1,-1,1])
-im3 = ax3.imshow(np.abs(bfc),extent=[-1,1,-1,1])
+fq0 /= 2; fq1 /= 2
+#im0 = ax0.imshow(bm,vmin=-1, vmax=1, extent=[-1,1,-1,1])
+im1 = ax1.imshow(bf1.real,vmin=-1, vmax=1, extent=[-1,1,-1,1], cmap='seismic')
+im2 = ax2.imshow(bf2.real,vmin=-1, vmax=1, extent=[-1,1,-1,1], cmap='seismic')
+im3 = ax3.imshow(bfc.real,vmin=-1, vmax=1, extent=[-1,1,-1,1], cmap='seismic')
 Z1 = np.abs(np.fft.fftshift(np.fft.fftn(bfc)))
 Z2 = np.abs(np.fft.fftshift(np.abs(np.fft.fftn(bf1)*np.fft.fftn(bf2).conj())))
-im4 = ax4.imshow(np.abs(np.fft.fftshift(np.fft.fftn(bf1))), 
-	extent=[fq0, fq1, fq0, fq1],
-	norm=LogNorm(vmin=Z2.max()*1.e-9, vmax=Z2.max()),
+im4 = ax4.imshow(np.abs(np.fft.fftshift(np.fft.fftn(bf1)))[100:300,100:300]**2/Z2.max(), 
+	extent=[fq0, fq1, fq0, fq1], cmap='hot_r',
+	norm=LogNorm(vmin=1.e-8, vmax=1),
 	interpolation='nearest')
-im5 = ax5.imshow(np.abs(np.fft.fftshift(np.fft.fftn(bf2))),
-	extent=[fq0, fq1, fq0, fq1],
-	norm=LogNorm(vmin=Z2.max()*1.e-9, vmax=Z2.max()),
+im5 = ax5.imshow(np.abs(np.fft.fftshift(np.fft.fftn(bf2)))[100:300,100:300]**2/Z2.max(),
+	extent=[fq0, fq1, fq0, fq1], cmap='hot_r',
+	norm=LogNorm(vmin=1.e-8, vmax=1),
 	interpolation='nearest')
-im6 = ax6.imshow(Z2, 
-	norm=LogNorm(vmin=Z2.max()*1.e-9, vmax=Z2.max()), 
+im6 = ax6.imshow(Z2[100:300,100:300]/Z2.max(), cmap='hot_r',
+	norm=LogNorm(vmin=1.e-8, vmax=1), 
 	extent=[fq0, fq1, fq0, fq1])
-fig.subplots_adjust(right=0.9)
-ax1.set_xlabel('l'); ax2.set_xlabel('l'); ax3.set_xlabel('l')
-ax1.set_ylabel('m')
-ax4.set_xlabel('u'); ax5.set_xlabel('u'); ax6.set_xlabel('u')
-ax4.set_ylabel('v')
+for ax in [ax4, ax5, ax6]:
+	ax.grid()
+fig.subplots_adjust(right=0.87)
+ax1.set_xlabel(r'$l$', fontsize=16); ax2.set_xlabel(r'$l$', fontsize=16)
+ax3.set_xlabel(r'$l$', fontsize=16); ax1.set_ylabel(r'$m$', fontsize=16)
+#ax0.set_xlabel(r'$l$'); ax0.set_ylabel(r'$m$')
+ax4.set_xlabel(r'$u$', fontsize=16); ax5.set_xlabel(r'$u$', fontsize=16)
+ax6.set_xlabel(r'$u$', fontsize=16); ax4.set_ylabel(r'$v$', fontsize=16)
 for ax in [ax2, ax3, ax5, ax6]:
 	plt.setp(ax.get_yticklabels(), visible=False)
-cbar_ax3 = fig.add_axes([0.925, 0.57, 0.025, 0.3])
-cbar_ax6 = fig.add_axes([0.925, 0.13, 0.025, 0.3])
-fig.colorbar(im3, cax=cbar_ax3)
-fig.colorbar(im6, cax=cbar_ax6)
+cbar_ax3 = fig.add_axes([0.88, 0.57, 0.025, 0.3])
+cbar_ax6 = fig.add_axes([0.88, 0.13, 0.025, 0.3])
+cbar3 = fig.colorbar(im3, cax=cbar_ax3)
+cbar6 = fig.colorbar(im6, cax=cbar_ax6)
+#cbar3.set_label('Peak Normalized', rotation=270)
+#cbar3.set_label('Peak Normalized', rotation=270)
 plt.show()
 
-#import IPython; IPython.embed()
+import IPython; IPython.embed()
 
 # #IM = a.img.Img(size=200)
 # plt.ion()

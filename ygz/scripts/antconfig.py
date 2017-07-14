@@ -31,7 +31,7 @@ ax = fig.add_subplot(211)
 p.scatter(X,Y, c='black')
 ax.set_aspect(1)
 setp( ax.get_xticklabels(), visible=False)
-setp( ax.get_yticklabels(), visible=False)
+#setp( ax.get_yticklabels(), visible=False)
 ax.get_yaxis().set_tick_params(direction='in')
 ax.get_xaxis().set_tick_params(direction='in')
 ax.grid()
@@ -39,8 +39,8 @@ ax = fig.add_subplot(212)
 g = 112
 Xg, Yg, Ig = X[:g], Y[:g], I[:g]
 p.scatter(Xg,Yg, c='black')
-for x,y,i in zip(Xg, Yg,Ig):
-    ax.annotate('%s' %i, xy=(x,y), textcoords='data', fontsize=12) # <--
+#for x,y,i in zip(Xg, Yg,Ig):
+#    ax.annotate('%s' %i, xy=(x,y), textcoords='data', fontsize=12) # <--
 ax.set_xlabel('East Position [m]')
 ax.set_ylabel('North Position [m]')
 ax.get_yaxis().set_tick_params(direction='in')

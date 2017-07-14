@@ -11,7 +11,7 @@ plt.rc('axes', linewidth=1.5)
 def freq_compare():
     sns.set_context(context='paper', font_scale=2)
     Afqs = np.linspace(.1, .2, 203)
-    RES = []; RES2 = []; FQS = [np.array([Afqs[120]]), np.array([Afqs[140]])]
+    RES = []; RES2 = []; FQS = [np.array([.145]), np.array([.155])]
     RES3 = []; RES4 = [];
     C = ['m', 'c', 'b']
     bp = np.load('../64code/bandpass.npz')['bandpass']
@@ -70,7 +70,7 @@ def freq_compare():
 
 def freq_compare_v2():
     Afqs = np.linspace(.1, .2, 203)
-    RES = []; RES2 = []; FQS = [np.array([Afqs[120]]), np.array([Afqs[140]])]
+    RES = []; RES2 = []; FQS = [np.array([.145]), np.array([.155])]
     RES3 = []; RES4 = [];
     
     bp = np.load('../64code/bandpass.npz')['bandpass']
@@ -107,7 +107,7 @@ def plot_freq_compare(RES,RES2,RES3,RES4,FQS,DT):
     fig = plt.figure()
     ax1 = plt.subplot(411)
     for i, fqs in enumerate(FQS):
-        label = "%.2fGHz" % fqs[0]
+        label = "%.3fGHz" % fqs[0]
         plt.plot(DT,RES[i].real/NORMS[i], c=C[i], label=label, linewidth=2)
     ax1.set_ylim([-1.1,1.1])
         #plt.plot(DT,RES[i].imag/NORMS[i], '-.', c=C[i])
@@ -115,30 +115,32 @@ def plot_freq_compare(RES,RES2,RES3,RES4,FQS,DT):
     plt.legend(loc=2)
     #ax1.set_ylabel('Without Rephasing')
 
-    ax2 = plt.subplot(413)
+
+
+    ax2 = plt.subplot(412)
 
     for i, fqs in enumerate(FQS):
-        label = "%.2fGHz" % fqs[0]
+        label = "%.3fGHz" % fqs[0]
+        plt.plot(DT,RES2[i].real/NORMS[i], c=C[i], label=label, linewidth=2)
+        #plt.plot(DT,RES2[i].imag/NORMS[i], '-.', c=C[i]) 
+        #plt.plot(DT, np.abs(RES2[i])/NORMS[i], c=C[i], linewidth=8, alpha=0.5)
+    plt.legend(loc=2) 
+    #plt.xlabel('Offset (Sidereal Days)')
+
+    ax3 = plt.subplot(413)
+
+    for i, fqs in enumerate(FQS):
+        label = "%.3fGHz" % fqs[0]
         plt.plot(DT,RES3[i].real/NORMS[i], c=C[i], label=label, linewidth=2)
         #plt.plot(DT,RES3[i].imag/NORMS[i], '-.', c=C[i])
         #plt.plot(DT, np.abs(RES3[i])/NORMS[i], c=C[i], linewidth=8, alpha=0.5)
     ax3.set_ylim([-1.1,1.1])
     plt.legend(loc=2)
     #ax2.set_ylabel('With Rephasing')
-
-    ax3 = plt.subplot(412)
-
-    for i, fqs in enumerate(FQS):
-        label = "%.2fGHz" % fqs[0]
-        plt.plot(DT,RES2[i].real/NORMS[i], c=C[i], label=label, linewidth=2)
-        #plt.plot(DT,RES2[i].imag/NORMS[i], '-.', c=C[i]) 
-        #plt.plot(DT, np.abs(RES2[i])/NORMS[i], c=C[i], linewidth=8, alpha=0.5)
-    plt.legend(loc=2) 
-    #plt.xlabel('Offset (Sidereal Days)')
     
     ax4 = plt.subplot(414)
     for i, fqs in enumerate(FQS):
-        label = "%.2fGHz" % fqs[0]
+        label = "%.3fGHz" % fqs[0]
         plt.plot(DT,RES4[i].real/NORMS[i], c=C[i], label=label, linewidth=2)
         #plt.plot(DT,RES4[i].imag/NORMS[i], '-.', c=C[i]) 
         #plt.plot(DT, np.abs(RES4[i])/NORMS[i], c=C[i], linewidth=8, alpha=0.5)
@@ -156,6 +158,7 @@ def plot_freq_compare(RES,RES2,RES3,RES4,FQS,DT):
         plt.grid()
         ax.yaxis.set_ticks(np.linspace(start, end, 3))
     fig.subplots_adjust(hspace=-0.05)
+    fig.text(0.04, 0.5, 'Normalized '+r'$\Theta_{\nu}$', va='center', rotation='vertical')
     plt.legend(loc=2) 
     plt.xlabel('Time Offset (Sidereal Days)')
     plt.show()

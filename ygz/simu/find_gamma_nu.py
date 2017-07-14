@@ -51,7 +51,8 @@ def get_res_for_freq(fq, bl1=bl1, bl2=bl2, tracking=False):
 	WS = OppSolver(T1=T1, fqs=np.array([fq]), tracking=tracking)
 	res = WS.opp(bl1=bl1, bl2=bl2, rephase=0,delay=False, sky=False, return_series=True)
 	return res
-plt.figure()
+fig = plt.figure()
+#frame1 = fig.add_axes((.1,.3,.8,.6))
 for i,tracking in enumerate([True, False]):
 	res = Parallel(n_jobs=fqs.size)(delayed(get_res_for_freq)(fq, tracking=tracking) for fq in fqs)
 	phi_nu = [np.angle(series[np.argmax(np.abs(series))])[0] for series in res]
@@ -73,10 +74,14 @@ plt.plot(fqs, coll[1]-coll[1][5], '--', c='b')
 plt.plot(fqs, coll[2]-coll[2][5], c='g', label='drift-scan')
 plt.plot(fqs, coll[3]-coll[3][5], '--', c='g')
 
-
+#plt.grid()
 plt.legend(loc=2)
 plt.xlabel('Frequency [GHz]')
 plt.ylabel('Phase at Peak')
+
+# frame2 = fig.add_axes((.1,.1,.8,.2))
+# plt.plot(fqs, (coll[2]-coll[2][5])-(coll[3]-coll[3][5]), '--', c='g')
+# plt.grid()
 plt.show()
 
 # for pair in itertools.combinations(res, 2):
