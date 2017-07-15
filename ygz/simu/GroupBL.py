@@ -160,15 +160,15 @@ def run_opp(i, comb, outfile, equiv=None, quiet=False, printevery=100, rephase=0
 
 def execute(combsname=None): #for profiling
 	CAL = 'psa6622_v003'
-	ARRAY = 'PAPER'
-	BEAM = 'PAPER'
-	NANTS = 112
-	version = 128
+	ARRAY = 'HERA'
+	BEAM = 'HERA'
+	NANTS = 320
+	version = 350
 	ENTRIES = 20000
-	if ARRAY == 'HERA':
-		EQUIV = 12127.9726
-	elif ARRAY == 'PAPER':
-		EQUIV = 10.2858996
+	# if ARRAY == 'HERA':
+	# 	EQUIV = 12127.9726
+	# elif ARRAY == 'PAPER':
+	# 	EQUIV = 10.2858996
 	FIRST = '{0}_{1}_all_save.csv'.format(ARRAY,version)
 	SECOND = '{0}_{1}_pm_rephs.csv'.format(ARRAY,version)
 	SECONDm = '{0}_{1}_p.csv'.format(ARRAY,version)
@@ -189,14 +189,21 @@ def execute(combsname=None): #for profiling
 		combs = get_bl_comb(top_dict, alpha=None)
 		save_obj('{0}_{1}_combs'.format(ARRAY, NANTS), combs)
 	
-	if False:
-		DT = 0.01
-		T1=np.arange(2456681.25, 2456681.75, DT)
+	if True:
+		DT = 0.001
+		T1 = np.arange(2456681.4, 2456681.6, DT)
 		fqs = np.array([.15])
 		
 		print 'Starting survey of all baselines'
 		global WS 
 		WS = w_opp.OppSolver(fqs=fqs, cal=CAL, T1=T1, beam=BEAM)
+		if ARRAY == 'HERA': 
+			blcoords = combs[0][0][1][0]
+			maxcorr, _ = WS.opp(bl1coords=blcoords, bl2coords=blcoords)
+		else:
+			maxcorr, _ = WS.opp(bl1=(0,26), bl2=(0,26))
+		EQUIV = np.abs(maxcorr)
+		print "equivalent baselines with Theta {}".format(EQUIV)
 		file = open(FIRST, 'w')
 		file.write(',sep,sep2,dT,peak,mult,bl1,bl2\n')
 		file.close()
@@ -204,11 +211,11 @@ def execute(combsname=None): #for profiling
 		NJOBS = 20
 		start_time = timeit.default_timer()
 		print 'Starting Opp with %d instances on %d jobs; dT= %f' % (len(combs), NJOBS, DT)
-		Parallel(n_jobs=NJOBS)(delayed(run_opp)(i, comb, FIRST, quiet=True, rephase=0) for i, comb in enumerate(combs))
+		Parallel(n_jobs=NJOBS)(delayed(run_opp)(i, comb, FIRST, equiv=EQUIV, quiet=True, rephase=0) for i, comb in enumerate(combs))
 		elapsed = timeit.default_timer() - start_time
 		print 'Elapsed time: ', elapsed
 
-	if True:
+	if False:
 		DT = 0.002
 		resume = 3571
 		rephs = "auto"
@@ -217,6 +224,13 @@ def execute(combsname=None): #for profiling
 		print '##### search over selected baselines  dT= %f ###'% DT
 		global WS
 		WS = w_opp.OppSolver(fqs=fqs, cal=CAL, T1=T1, beam=BEAM)
+		if ARRAY == 'HERA': 
+			blcoords = combs[0][0][1][0]
+			maxcorr, _ = WS.opp(bl1coords=blcoords, bl2coords=blcoords)
+		else:
+			maxcorr, _ = WS.opp(bl1=(0,26), bl2=(0,26))
+		EQUIV = np.abs(maxcorr)
+
 		subcombs = get_sub_combs(FIRST, combs, mode='pm', num=ENTRIES)
 
 		if resume == 0:
@@ -242,6 +256,13 @@ def execute(combsname=None): #for profiling
 		print '##### search over selected baselines  dT= %f ###'% DT
 		global WS
 		WS = w_opp.OppSolver(fqs=fqs, cal=CAL, T1=T1, beam=ARRAY)
+		if ARRAY == 'HERA': 
+			blcoords = combs[0][0][1][0]
+			maxcorr, _ = WS.opp(bl1coords=blcoords, bl2coords=blcoords)
+		else:
+			maxcorr, _ = WS.opp(bl1=(0,26), bl2=(0,26))
+		EQUIV = np.abs(maxcorr)
+
 		subcombs = get_sub_combs(FIRST, combs, mode='p', num=ENTRIES)
 
 		

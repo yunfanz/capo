@@ -89,7 +89,7 @@ def get_imp(df, Theta_min=0.0):
 	totalsens = totalsumsq#/totalsum*np.sqrt(len(dft.index))
 	eqsens = eqsumsq#/eqsum*np.sqrt(len(dfeq.index))
 	improve = (totalsens-eqsens)/eqsens
-	return totalsens, eqsens
+	return np.sqrt(totalsens), np.sqrt(eqsens)
 
 def sensplot():
 	FILES = ['HERA_350_all.csv', 'HERA_243_all.csv', 'HERA_128_all.csv', 'HERA_37_all.csv','PAPER_128_all.csv']
@@ -111,11 +111,14 @@ def sensplot():
 		 
 		imp = np.array([get_imp(df, l) for l in TL])
 		totalsensL, eqsensL = imp.T
+		S = np.amax(totalsensL)
+		totalsensL/=S; eqsensL/=S
 		plt.plot(TL, totalsensL, label=LABELS[i], color=COLORS[i], linewidth=3)
 		plt.plot(TL, eqsensL,'--', color=COLORS[i], linewidth=3)
-	plt.legend()
+	plt.legend(loc=3, fontsize=16)
 	plt.xlabel(r'$\widetilde{\Theta}_{min}$')
-	plt.ylabel(r'$\rho(\widetilde{\Theta}_{min})/\rho(\widetilde{\Theta}_{min}=1.0)$')
+	plt.ylabel("Fraction of Array Sensitivity")
+	#plt.ylabel(r'$\rho(\widetilde{\Theta}_{min})/\rho(\widetilde{\Theta}_{min}=0.0)$')
 	plt.gcf().subplots_adjust(bottom=0.2)
 	#plt.rc('axes', linewidth=2)
 
