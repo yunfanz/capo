@@ -27,7 +27,8 @@ def _HERA_plotsense_dict(file, NTOP=None, NANTS=None):
 			blx, bly, blz = a2pos-a1pos
 			has_entry = False
 			for key in bl_gps.keys():
-				if np.hypot(key[0]-blx, key[1]-bly) < 1:
+				#if np.hypot(key[0]-blx, key[1]-bly) < 1:
+				if (abs(key[0]-blx)<0.1 and abs(key[1]-bly)<0.1) or (abs(key[0]+blx)<0.1 and abs(key[1]+bly)<0.1):
 					has_entry = True
 					bl_gps[key] = bl_gps.get(key, []) + [(i,j)]
 					break
@@ -140,7 +141,8 @@ def run_opp(i, comb, outfile, equiv=None, quiet=False, printevery=100, rephase=0
 	#i is the index of comb in combs
 	file = open(outfile, 'a')
 	label1, label2 = comb[0][0], comb[1][0]
-	if i % printevery == 0: print 'Progress: ', i
+	if i % printevery == 0: 
+		print 'Progress: ', i
 	bl1coords, bl2coords = comb[0][1][0], comb[1][1][0]
 	bl1L = bl_length(bl1coords); bl2L = bl_length(bl2coords)
 	multiplicity = comb[0][1][1]*comb[1][1][1]
@@ -169,7 +171,7 @@ def execute(combsname=None): #for profiling
 	# 	EQUIV = 12127.9726
 	# elif ARRAY == 'PAPER':
 	# 	EQUIV = 10.2858996
-	FIRST = '{0}_{1}_all_save.csv'.format(ARRAY,version)
+	FIRST = '{0}_{1}_all.csv'.format(ARRAY,version)
 	SECOND = '{0}_{1}_pm_rephs.csv'.format(ARRAY,version)
 	SECONDm = '{0}_{1}_p.csv'.format(ARRAY,version)
 	FILE = "../calfiles/HERA_antconfig/antenna_positions_{}.dat".format(version)
@@ -202,7 +204,7 @@ def execute(combsname=None): #for profiling
 			maxcorr, _ = WS.opp(bl1coords=blcoords, bl2coords=blcoords)
 		else:
 			maxcorr, _ = WS.opp(bl1=(0,26), bl2=(0,26))
-		EQUIV = np.abs(maxcorr)
+		EQUIV = np.abs(maxcorr[0])
 		print "equivalent baselines with Theta {}".format(EQUIV)
 		file = open(FIRST, 'w')
 		file.write(',sep,sep2,dT,peak,mult,bl1,bl2\n')

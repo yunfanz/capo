@@ -37,7 +37,8 @@ top = np.array([tx,ty,tz], dtype=tx2.dtype)
 
 bm = aa[0].bm_response((tx,ty,tz),pol='I')[0]**2#/np.abs(tz)   #tz is the Jacobian
 
-bm = ma.masked_where(tz < 0.001, bm)
+#bm = np.exp(-(tx**2+ty**2))
+bm = ma.masked_where(tz < 0.0001, bm)
 
 #bm /= bm.sum()
 #h.map = bm
@@ -65,7 +66,7 @@ fng1 = np.exp(-2j*np.pi*bl1_prj*fq)
 fng2 = np.exp(-2j*np.pi*bl2_prj*fq)
 # #fng2=1
 bm2 = aa[0].bm_response((t2x,t2y,t2z),pol='I')[0]**2#/np.abs(tz)#*np.abs(tzsave)
-bm2 = ma.masked_where(tz < 0.001, bm2)
+bm2 = ma.masked_where(tz < 0.0001, bm2)
 # #bm = np.ones_like(tx)
 # #bm = np.where(tz > 0, bm, 0)
 # bm2 = np.where(tz > 0.001, bm2, 0)
@@ -102,9 +103,11 @@ fftfq = np.fft.fftshift(np.fft.fftfreq(400, 2./400))
 fq0, fq1 = fftfq[0], fftfq[-1]
 fq0 /= 2; fq1 /= 2
 #im0 = ax0.imshow(bm,vmin=-1, vmax=1, extent=[-1,1,-1,1])
+#import IPython; IPython.embed()
+peakphase = np.exp(1.0j*np.angle(bfc.flatten()[np.argmax(np.abs(bfc))]))
 im1 = ax1.imshow(bf1.real,vmin=-1, vmax=1, extent=[-1,1,-1,1], cmap='seismic')
 im2 = ax2.imshow(bf2.real,vmin=-1, vmax=1, extent=[-1,1,-1,1], cmap='seismic')
-im3 = ax3.imshow(bfc.real,vmin=-1, vmax=1, extent=[-1,1,-1,1], cmap='seismic')
+im3 = ax3.imshow((bfc/peakphase).real,vmin=-1, vmax=1, extent=[-1,1,-1,1], cmap='seismic')
 Z1 = np.abs(np.fft.fftshift(np.fft.fftn(bfc)))
 Z2 = np.abs(np.fft.fftshift(np.abs(np.fft.fftn(bf1)*np.fft.fftn(bf2).conj())))
 im4 = ax4.imshow(np.abs(np.fft.fftshift(np.fft.fftn(bf1)))[100:300,100:300]**2/Z2.max(), 
