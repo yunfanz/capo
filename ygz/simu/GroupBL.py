@@ -195,6 +195,7 @@ def execute(combsname=None): #for profiling
 		DT = 0.001
 		T1 = np.arange(2456681.4, 2456681.6, DT)
 		fqs = np.array([.15])
+		resume = 133365
 		
 		print 'Starting survey of all baselines'
 		global WS 
@@ -206,14 +207,15 @@ def execute(combsname=None): #for profiling
 			maxcorr, _ = WS.opp(bl1=(0,26), bl2=(0,26))
 		EQUIV = np.abs(maxcorr[0])
 		print "equivalent baselines with Theta {}".format(EQUIV)
-		file = open(FIRST, 'w')
-		file.write(',sep,sep2,dT,peak,mult,bl1,bl2\n')
-		file.close()
+		if resume == 0:
+			file = open(FIRST, 'w')
+			file.write(',sep,sep2,dT,peak,mult,bl1,bl2\n')
+			file.close()
 
 		NJOBS = 20
 		start_time = timeit.default_timer()
 		print 'Starting Opp with %d instances on %d jobs; dT= %f' % (len(combs), NJOBS, DT)
-		Parallel(n_jobs=NJOBS)(delayed(run_opp)(i, comb, FIRST, equiv=EQUIV, quiet=True, rephase=0) for i, comb in enumerate(combs))
+		Parallel(n_jobs=NJOBS)(delayed(run_opp)(i+resume, comb, FIRST, equiv=EQUIV, quiet=True, rephase=0) for i, comb in enumerate(combs[resume:]))
 		elapsed = timeit.default_timer() - start_time
 		print 'Elapsed time: ', elapsed
 
