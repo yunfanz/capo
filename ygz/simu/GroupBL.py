@@ -195,7 +195,12 @@ def execute(combsname=None): #for profiling
 		DT = 0.001
 		T1 = np.arange(2456681.4, 2456681.6, DT)
 		fqs = np.array([.15])
-		resume = 133365
+		resume = 383523
+		n_entries = 100000
+		if resume + n_entries > len(combs):
+			n_entries = len(combs) - resume
+		if True:
+			FIRST = '{0}_{1}_{2}-{3}.csv'.format(ARRAY,version, resume, resume+n_entries)
 		
 		print 'Starting survey of all baselines'
 		global WS 
@@ -212,10 +217,11 @@ def execute(combsname=None): #for profiling
 			file.write(',sep,sep2,dT,peak,mult,bl1,bl2\n')
 			file.close()
 
-		NJOBS = 20
+		NJOBS = 8
 		start_time = timeit.default_timer()
 		print 'Starting Opp with %d instances on %d jobs; dT= %f' % (len(combs), NJOBS, DT)
-		Parallel(n_jobs=NJOBS)(delayed(run_opp)(i+resume, comb, FIRST, equiv=EQUIV, quiet=True, rephase=0) for i, comb in enumerate(combs[resume:]))
+		Parallel(n_jobs=NJOBS)(delayed(run_opp)(i+resume, comb, FIRST, equiv=EQUIV, quiet=True, rephase=0) 
+			for i, comb in enumerate(combs[resume:resume+n_entries]))
 		elapsed = timeit.default_timer() - start_time
 		print 'Elapsed time: ', elapsed
 
