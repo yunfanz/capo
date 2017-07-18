@@ -113,6 +113,7 @@ def plot_freq_compare(RES,RES2,RES3,RES4,FQS,DT):
         #plt.plot(DT,RES[i].imag/NORMS[i], '-.', c=C[i])
         #plt.plot(DT, np.abs(RES[i])/NORMS[i], c=C[i], linewidth=8, alpha=0.5)
     plt.legend(loc=2)
+    ax1.title('Equivalent')
     #ax1.set_ylabel('Without Rephasing')
 
 
@@ -160,7 +161,7 @@ def plot_freq_compare(RES,RES2,RES3,RES4,FQS,DT):
     fig.subplots_adjust(hspace=-0.05)
     fig.text(0.04, 0.5, 'Normalized '+r'$\Theta_{\nu}$', va='center', rotation='vertical')
     plt.legend(loc=2) 
-    plt.xlabel('Time Offset (Sidereal Days)')
+    plt.xlabel('Time Offset '+r'$\Delta t$'+' [Sidereal Days]')
     plt.show()
 
 if __name__ == "__main__":
