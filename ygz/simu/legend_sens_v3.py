@@ -97,7 +97,7 @@ plt.setp(ax.get_xticklabels(), visible=False)
 
 ax.grid()
 #ax.set_xlabel('Time Delay [Sidereal Day]')
-ax.set_ylabel(r'$\Theta_{bb^\prime}/\Theta_{\{1,0:1,0\}}$')
+ax.set_ylabel("Correlation \n"+r'$\Theta_{bb^\prime}/\Theta_{\{1,0:1,0\}}$')
 ax.set_xlim([-0.01, 0.16])
 # =======
 # ax.set_ylabel('Correlation [Normalized to 1]')
@@ -118,8 +118,8 @@ for i in xrange(Npts):
 				linewidths=2)
 
 ax2.grid()
-ax2.set_xlabel(r"$\Delta T_{bb^\prime}$" + " [Sidereal Day]")
-ax2.set_ylabel(r"$\widetilde{\Theta}_{bb^\prime}/\widetilde{\Theta}_{\{1,0:1,0\}}$")
+ax2.set_xlabel("Time Offset "+r"$\Delta t_{bb^\prime}$" + " [Sidereal Day]")
+ax2.set_ylabel("Effective Correlation \n"+r"$\widetilde{\Theta}_{bb^\prime}/\widetilde{\Theta}_{\{1,0:1,0\}}$")
 #plt.tight_layout()
 #f.subplots_adjust(hspace=0.02,bottom=0.2)
 #ax.set_xlims([-0.02, 1.16])

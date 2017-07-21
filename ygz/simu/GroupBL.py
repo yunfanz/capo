@@ -195,10 +195,11 @@ def execute(combsname=None): #for profiling
 		DT = 0.001
 		T1 = np.arange(2456681.4, 2456681.6, DT)
 		fqs = np.array([.15])
-		resume = 383523
-		n_entries = 500000
-		if resume + n_entries > len(combs):
-			n_entries = len(combs) - resume
+		resume = 456873
+		end = 683523
+		n_entries = 300000
+		if resume + n_entries > end:
+			n_entries = end - resume
 		if False:
 			FIRST = '{0}_{1}_{2}-{3}.csv'.format(ARRAY,version, resume, resume+n_entries)
 		

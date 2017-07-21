@@ -95,14 +95,17 @@ def freq_compare_v2():
     #import IPython; IPython.embed()
     return RES,RES2,RES3,RES4,FQS,DT
 
+def get_axis_limits(ax, xscale=.95, yscale=.75):
+    return ax.get_xlim()[0]*xscale, ax.get_ylim()[1]*yscale
+
 def plot_freq_compare(RES,RES2,RES3,RES4,FQS,DT):
     NORMS = [np.amax(np.abs(res)) for res in RES]
     #font = FontProperties()
     #font.set_weight('bold')
     #sns.set_context(context='paper')
-    sns.set(style="ticks", color_codes=False,font='DejaVu Serif', font_scale=1.5)
+    sns.set(style="ticks", color_codes=Trues,font='DejaVu Serif', font_scale=1.5)
     plt.rc('axes', linewidth=2)
-    C = ['c', 'm']
+    C = ['r', 'b']
 
     fig = plt.figure()
     ax1 = plt.subplot(411)
@@ -112,8 +115,8 @@ def plot_freq_compare(RES,RES2,RES3,RES4,FQS,DT):
     ax1.set_ylim([-1.1,1.1])
         #plt.plot(DT,RES[i].imag/NORMS[i], '-.', c=C[i])
         #plt.plot(DT, np.abs(RES[i])/NORMS[i], c=C[i], linewidth=8, alpha=0.5)
-    plt.legend(loc=2)
-    ax1.title('Equivalent')
+    plt.legend(loc=1)
+    ax1.annotate('Equivalent', xy=get_axis_limits(ax1))
     #ax1.set_ylabel('Without Rephasing')
 
 
@@ -125,7 +128,8 @@ def plot_freq_compare(RES,RES2,RES3,RES4,FQS,DT):
         plt.plot(DT,RES2[i].real/NORMS[i], c=C[i], label=label, linewidth=2)
         #plt.plot(DT,RES2[i].imag/NORMS[i], '-.', c=C[i]) 
         #plt.plot(DT, np.abs(RES2[i])/NORMS[i], c=C[i], linewidth=8, alpha=0.5)
-    plt.legend(loc=2) 
+    plt.legend(loc=1) 
+    ax2.annotate('Near-Equivalent', xy=get_axis_limits(ax2))
     #plt.xlabel('Offset (Sidereal Days)')
 
     ax3 = plt.subplot(413)
@@ -136,7 +140,8 @@ def plot_freq_compare(RES,RES2,RES3,RES4,FQS,DT):
         #plt.plot(DT,RES3[i].imag/NORMS[i], '-.', c=C[i])
         #plt.plot(DT, np.abs(RES3[i])/NORMS[i], c=C[i], linewidth=8, alpha=0.5)
     ax3.set_ylim([-1.1,1.1])
-    plt.legend(loc=2)
+    plt.legend(loc=1)
+    ax3.annotate('Equivalent', xy=get_axis_limits(ax3))
     #ax2.set_ylabel('With Rephasing')
     
     ax4 = plt.subplot(414)
@@ -145,6 +150,9 @@ def plot_freq_compare(RES,RES2,RES3,RES4,FQS,DT):
         plt.plot(DT,RES4[i].real/NORMS[i], c=C[i], label=label, linewidth=2)
         #plt.plot(DT,RES4[i].imag/NORMS[i], '-.', c=C[i]) 
         #plt.plot(DT, np.abs(RES4[i])/NORMS[i], c=C[i], linewidth=8, alpha=0.5)
+    plt.legend(loc=1) 
+    plt.xlabel('Time Offset '+r'$\Delta t$'+' [Sidereal Days]')
+    ax4.annotate('Near-Equivalent', xy=get_axis_limits(ax4))
 
     for i,ax in enumerate([ax1,ax2,ax3,ax4]):
         if ax is not ax4:
@@ -160,8 +168,7 @@ def plot_freq_compare(RES,RES2,RES3,RES4,FQS,DT):
         ax.yaxis.set_ticks(np.linspace(start, end, 3))
     fig.subplots_adjust(hspace=-0.05)
     fig.text(0.04, 0.5, 'Normalized '+r'$\Theta_{\nu}$', va='center', rotation='vertical')
-    plt.legend(loc=2) 
-    plt.xlabel('Time Offset '+r'$\Delta t$'+' [Sidereal Days]')
+    
     plt.show()
 
 if __name__ == "__main__":

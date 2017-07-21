@@ -37,12 +37,12 @@ def pairplot(Theta_min=0):
 		df[r"$\widetilde{\Theta}_{bb^\prime}$"] = np.sqrt(df['mult'])*df['peak']/np.sqrt(1+df['rho0']*2*np.sqrt(df['mult']))
 		df[r"$\widetilde{\Theta}_{bb^\prime}$"] /= np.amax(df[r"$\widetilde{\Theta}_{bb^\prime}$"])
 		df = df.loc[df[r"$\widetilde{\Theta}_{bb^\prime}$"]>Theta_min]
-		df['$\Delta T_{bb^\prime}$'] = df['dT']
+		df['$\Delta t_{bb^\prime}$'] = df['dT']
 		dflist.append(df)
 
 	df = pd.concat(dflist)
 	plt.locator_params(axis='x', nticks=10)
-	g = sns.pairplot(df,hue='Array',vars=['$\Delta T_{bb^\prime}$',r"$\widetilde{\Theta}_{bb^\prime}$",r'$\bar{b}$'],
+	g = sns.pairplot(df,hue='Array',vars=['$\Delta t_{bb^\prime}$',r"$\widetilde{\Theta}_{bb^\prime}$",r'$\bar{b}$'],
 		plot_kws={"s":30}, diag_kws={'histtype':"step", "linewidth":3})
 	for i, j in zip(*np.triu_indices_from(g.axes, 1)):
 		g.axes[i, j].set_visible(False)
@@ -92,7 +92,7 @@ def get_imp(df, Theta_min=0.0):
 	return np.sqrt(totalsens), np.sqrt(eqsens)
 
 def sensplot():
-	FILES = ['HERA_350_all.csv', 'HERA_243_all.csv', 'HERA_128_all.csv', 'HERA_37_all.csv','PAPER_128_all.csv']
+	FILES = ['HERA_350_all_save.csv', 'HERA_243_all.csv', 'HERA_128_all.csv', 'HERA_37_all.csv','PAPER_128_all.csv']
 	LABELS = ['HERA350', 'HERA243', 'HERA128', 'HERA37', 'PAPER128']
 	COLORS = gen_color(len(FILES))
 	print "========= Statistics of sensitibity contribution =========="
@@ -116,7 +116,7 @@ def sensplot():
 		plt.plot(TL, totalsensL, label=LABELS[i], color=COLORS[i], linewidth=3)
 		plt.plot(TL, eqsensL,'--', color=COLORS[i], linewidth=3)
 	plt.legend(loc=3, fontsize=16)
-	plt.xlabel(r'$\widetilde{\Theta}_{min}$')
+	plt.xlabel("Effective Correlation Cutoff "+r'$\widetilde{\Theta}_{min}$')
 	plt.ylabel("Fraction of Array Sensitivity")
 	#plt.ylabel(r'$\rho(\widetilde{\Theta}_{min})/\rho(\widetilde{\Theta}_{min}=0.0)$')
 	plt.gcf().subplots_adjust(bottom=0.2)
@@ -124,8 +124,8 @@ def sensplot():
 
 
 if __name__=="__main__":
-	sensplot()
-	#pairplot(0.01)
+	#sensplot()
+	pairplot(0.01)
 
 	plt.show()
 	#import IPython; IPython.embed()

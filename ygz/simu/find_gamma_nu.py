@@ -7,7 +7,7 @@ from skimage.restoration import unwrap_phase
 import seaborn as sns
 from matplotlib.font_manager import FontProperties
 import aipy as ap
-sns.set_context("paper", font_scale=1.5)
+sns.set_context("paper", font_scale=2)
 sns.set(style="ticks", color_codes=False,font='DejaVu Serif', font_scale=1.5)
 plt.rc('axes', linewidth=1.5)
 font = FontProperties()
@@ -69,15 +69,15 @@ for i,tracking in enumerate([True, False]):
 	
 	#plt.plot(fqs,phi_nu, label=['tracking', 'drift-scan'][i])
 
-plt.plot(fqs, coll[0]-coll[0][5], c='b', label='tracking')
+plt.plot(fqs, coll[0]-coll[0][5], c='b', label='Tracking')
 plt.plot(fqs, coll[1]-coll[1][5], '--', c='b')
-plt.plot(fqs, coll[2]-coll[2][5], c='g', label='drift-scan')
-plt.plot(fqs, coll[3]-coll[3][5], '--', c='g')
+plt.plot(fqs, coll[2]-coll[2][5], c='r', label='Drift-scan')
+plt.plot(fqs, coll[3]-coll[3][5], '--', c='r')
 
 #plt.grid()
 plt.legend(loc=2)
-plt.xlabel('Frequency [GHz]')
-plt.ylabel('Phase at Peak')
+plt.xlabel('Frequency '+r'$\nu$'+' [GHz]')
+plt.ylabel('Phase of '+r'$\Theta_\nu$'+' at\n'+'optimal '+r'$\Delta t$')
 
 # frame2 = fig.add_axes((.1,.1,.8,.2))
 # plt.plot(fqs, (coll[2]-coll[2][5])-(coll[3]-coll[3][5]), '--', c='g')
