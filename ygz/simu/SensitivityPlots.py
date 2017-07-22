@@ -23,7 +23,7 @@ def gen_color(l=1):
 
 def pairplot(Theta_min=0):
 	FILES = ['PAPER_128_pm.csv', 'HERA_350_pm.csv', 'HERA_128_pm.csv']
-	LABELS = ['PAPER128','HERA350', 'HERA128']
+	LABELS = ['PAPER-128','HERA-350', 'HERA-128']
 
 	sns.set(style='ticks', font_scale=1.5,font='DejaVu Serif')
 	dflist = []
@@ -37,7 +37,7 @@ def pairplot(Theta_min=0):
 		df[r"$\widetilde{\Theta}_{bb^\prime}$"] = np.sqrt(df['mult'])*df['peak']/np.sqrt(1+df['rho0']*2*np.sqrt(df['mult']))
 		df[r"$\widetilde{\Theta}_{bb^\prime}$"] /= np.amax(df[r"$\widetilde{\Theta}_{bb^\prime}$"])
 		df = df.loc[df[r"$\widetilde{\Theta}_{bb^\prime}$"]>Theta_min]
-		df['$\Delta t_{bb^\prime}$'] = df['dT']
+		df['$\Delta t_{bb^\prime}$'] = df['dT']*24
 		dflist.append(df)
 
 	df = pd.concat(dflist)
@@ -55,17 +55,17 @@ def pairplot(Theta_min=0):
 	# g = g.map_lower(plt.scatter, alpha=0.5, s=30)
 	# g = g.add_legend()
 
-	ax0 = g.axes[0,0]
-	start, end = ax0.get_xlim()
-	#start+=0.1999999; end-=0.199999
-	ax0.set_xticks(np.linspace(start, end, 3))
-	ax1 = g.axes[0,1]
-	start, end = ax1.get_xlim()
-	start+=0.2; end-=0.2
-	ax1.set_xticks(np.linspace(start, end, 3))
-	ax2 = g.axes[0,2]
-	start, end = ax2.get_xlim()
-	ax2.set_xticks(np.linspace(start, end, 3))
+	# ax0 = g.axes[0,0]
+	# start, end = ax0.get_xlim()
+	# #start+=0.1999999; end-=0.199999
+	# ax0.set_xticks(np.linspace(start, end, 3))
+	# ax1 = g.axes[0,1]
+	# #start, end = ax1.get_xlim()
+	# start+=0.2; end-=0.2
+	# ax1.set_xticks(np.linspace(start, end, 3))
+	# ax2 = g.axes[0,2]
+	# start, end = ax2.get_xlim()
+	# ax2.set_xticks(np.linspace(start, end, 3))
 	# ax3 = g.axes[0,3]
 	# start, end = ax3.get_xlim()
 	# ax3.set_xticks(np.linspace(start, end, 3))
@@ -93,7 +93,7 @@ def get_imp(df, Theta_min=0.0):
 
 def sensplot():
 	FILES = ['HERA_350_all_save.csv', 'HERA_243_all.csv', 'HERA_128_all.csv', 'HERA_37_all.csv','PAPER_128_all.csv']
-	LABELS = ['HERA350', 'HERA243', 'HERA128', 'HERA37', 'PAPER128']
+	LABELS = ['HERA-350', 'HERA-243', 'HERA-128', 'HERA-37', 'PAPER-128']
 	COLORS = gen_color(len(FILES))
 	print "========= Statistics of sensitibity contribution =========="
 	sns.set(style="ticks", color_codes=True,font='DejaVu Serif', font_scale=2)

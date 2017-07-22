@@ -79,7 +79,7 @@ for legax in lega:
 # 	ax.scatter(dt, dp, marker=m, c=c, cmap=cm.jet)
 #import IPython; IPython.embed()
 
-
+df['dT'] = df['dT']*24
 
 for i in xrange(Npts):
 	label = str(df['sep'][i])+':'+str(df['sep2'][i])
@@ -98,8 +98,8 @@ plt.setp(ax.get_xticklabels(), visible=False)
 ax.grid()
 #ax.set_xlabel('Time Delay [Sidereal Day]')
 ax.set_ylabel("Correlation \n"+r'$\Theta_{bb^\prime}/\Theta_{\{1,0:1,0\}}$')
-ax.set_xlim([-0.01, 0.16])
-# =======
+#ax.set_xlim([-0.01, 0.16])
+# =======s
 # ax.set_ylabel('Correlation [Normalized to 1]')
 # ax.set_xlim([-0.01, 0.05])
 # >>>>>>> 4edb61abe312fcaf2c92b9b7d1a92034c9afd333
@@ -118,7 +118,7 @@ for i in xrange(Npts):
 				linewidths=2)
 
 ax2.grid()
-ax2.set_xlabel("Time Offset "+r"$\Delta t_{bb^\prime}$" + " [Sidereal Day]")
+ax2.set_xlabel("Optimal Time Offset "+r"$\Delta t_{bb^\prime}$" + " [Hours]")
 ax2.set_ylabel("Effective Correlation \n"+r"$\widetilde{\Theta}_{bb^\prime}/\widetilde{\Theta}_{\{1,0:1,0\}}$")
 #plt.tight_layout()
 #f.subplots_adjust(hspace=0.02,bottom=0.2)

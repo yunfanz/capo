@@ -103,7 +103,7 @@ def plot_freq_compare(RES,RES2,RES3,RES4,FQS,DT):
     #font = FontProperties()
     #font.set_weight('bold')
     #sns.set_context(context='paper')
-    sns.set(style="ticks", color_codes=Trues,font='DejaVu Serif', font_scale=1.5)
+    sns.set(style="ticks", color_codes=True,font='DejaVu Serif', font_scale=1.5)
     plt.rc('axes', linewidth=2)
     C = ['r', 'b']
 
@@ -151,7 +151,7 @@ def plot_freq_compare(RES,RES2,RES3,RES4,FQS,DT):
         #plt.plot(DT,RES4[i].imag/NORMS[i], '-.', c=C[i]) 
         #plt.plot(DT, np.abs(RES4[i])/NORMS[i], c=C[i], linewidth=8, alpha=0.5)
     plt.legend(loc=1) 
-    plt.xlabel('Time Offset '+r'$\Delta t$'+' [Sidereal Days]')
+    plt.xlabel('Time Offset '+r'$\Delta t$'+' [Hours]')
     ax4.annotate('Near-Equivalent', xy=get_axis_limits(ax4))
 
     for i,ax in enumerate([ax1,ax2,ax3,ax4]):
@@ -173,5 +173,5 @@ def plot_freq_compare(RES,RES2,RES3,RES4,FQS,DT):
 
 if __name__ == "__main__":
     RES,RES2,RES3,RES4,FQS,DT = freq_compare_v2()
-    plot_freq_compare(RES,RES2,RES3,RES4,FQS,DT)
+    plot_freq_compare(RES,RES2,RES3,RES4,FQS,DT*24)
 

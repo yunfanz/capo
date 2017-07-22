@@ -195,12 +195,12 @@ def execute(combsname=None): #for profiling
 		DT = 0.001
 		T1 = np.arange(2456681.4, 2456681.6, DT)
 		fqs = np.array([.15])
-		resume = 456873
-		end = 683523
-		n_entries = 300000
+		resume = 1037940
+		end = len(combs)
+		n_entries = 100000
 		if resume + n_entries > end:
 			n_entries = end - resume
-		if False:
+		if True:
 			FIRST = '{0}_{1}_{2}-{3}.csv'.format(ARRAY,version, resume, resume+n_entries)
 		
 		print 'Starting survey of all baselines'
