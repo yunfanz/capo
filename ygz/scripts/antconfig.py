@@ -4,9 +4,12 @@ from mpl_toolkits.mplot3d import Axes3D
 from pylab import *
 import matplotlib.ticker as tic
 import seaborn as sns
+from matplotlib import collections  as mc
+
+
 #plt.style.use('seaborn-deep')
-sns.set(style='ticks', font_scale=2.5,font='DejaVu Serif')
-plt.rc('axes', linewidth=2.5)
+sns.set(style='ticks', font_scale=1.5,font='DejaVu Serif')
+plt.rc('axes', linewidth=1.5)
 aa = a.cal.get_aa('psa6622_v003',n.array([.15]))
 #aa=a.cal.get_aa('paper128',n.array([.15]))
 nants = 128
@@ -39,6 +42,15 @@ ax = fig.add_subplot(212)
 g = 112
 Xg, Yg, Ig = X[:g], Y[:g], I[:g]
 p.scatter(Xg,Yg, c='black')
+
+lines = [[(X[5], Y[5]), (X[32], Y[32])], 
+		[(X[40], Y[40]), (X[14], Y[14])],
+		[(X[17], Y[17]), (X[32], Y[32])], 
+		[(X[17], Y[17]), (X[55], Y[55])]]
+c = ['r','r','y','b']
+
+lc = mc.LineCollection(lines, colors=c, linewidths=2)
+ax.add_collection(lc)
 #for x,y,i in zip(Xg, Yg,Ig):
 #    ax.annotate('%s' %i, xy=(x,y), textcoords='data', fontsize=12) # <--
 ax.set_xlabel('East Position [m]')
