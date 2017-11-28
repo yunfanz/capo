@@ -46,6 +46,7 @@ def pairplot(Theta_min=0):
 		plot_kws={"s":30}, diag_kws={'histtype':"step", "linewidth":3})
 	for i, j in zip(*np.triu_indices_from(g.axes, 1)):
 		g.axes[i, j].set_visible(False)
+	#g.axes[0,0].set_visible(False)
 	plt.legend(loc=2)
 
 	# g = sns.PairGrid(df,hue='Array',vars=['$dT$','$\Theta$','$\widetilde{\Theta}$','$L$'])
@@ -55,20 +56,18 @@ def pairplot(Theta_min=0):
 	# g = g.map_lower(plt.scatter, alpha=0.5, s=30)
 	# g = g.add_legend()
 
-	# ax0 = g.axes[0,0]
-	# start, end = ax0.get_xlim()
-	# #start+=0.1999999; end-=0.199999
-	# ax0.set_xticks(np.linspace(start, end, 3))
-	# ax1 = g.axes[0,1]
-	# #start, end = ax1.get_xlim()
-	# start+=0.2; end-=0.2
-	# ax1.set_xticks(np.linspace(start, end, 3))
-	# ax2 = g.axes[0,2]
-	# start, end = ax2.get_xlim()
-	# ax2.set_xticks(np.linspace(start, end, 3))
-	# ax3 = g.axes[0,3]
-	# start, end = ax3.get_xlim()
-	# ax3.set_xticks(np.linspace(start, end, 3))
+	ax0 = g.axes[0,0]
+	start, end = ax0.get_xlim()
+	#start+=0.1999999; end-=0.199999
+	ax0.set_xticks(np.linspace(start, end, 3))
+	ax0.set_yticklabels([])
+	ax1 = g.axes[0,1]
+	start, end = ax1.get_xlim()
+	#start+=0.2; end-=0.2
+	ax1.set_xticks(np.linspace(0, 1, 3))
+	ax2 = g.axes[0,2]
+	start, end = ax2.get_xlim()
+	ax2.set_xticks(np.linspace(0, end, 3))
 
 	#import IPython; IPython.embed()
 	plt.gcf().subplots_adjust(right=0.9)
